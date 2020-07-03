@@ -3,12 +3,23 @@ import {Typography, Button, Form, Input} from 'antd'
 
 const {TextArea} = Input;
 
+const Contintents = [
+    { key:1 , value:"Africa"},
+    { key:2 , value:"Europe"},
+    { key:3 , value:"Asia"},
+    { key:4 , value:"North America"},
+    { key:5 , value:"South America"},
+    { key:6 , value:"Australia"},
+    { key:7 , value:"Antarctica"}
+]
+
 
 function UploadProductPage() {
     const [Title, setTitle] = useState("")
     const [Description, setDescription] = useState("")
     const [Price, setPrice] = useState(0)
     const [Continent, setContinent] = useState(1)
+    // 상품 이미지 들
     const [Images, setImages] = useState([])
 
 
@@ -23,6 +34,10 @@ function UploadProductPage() {
 
     const priceChangeHandler = (event) =>{
         setPrice(event.currentTarget.value)
+    }
+
+    const continentChangeHandler = (event) =>{
+        setContinent(event.currentTarget.value)
     }
 
     return (
@@ -46,7 +61,10 @@ function UploadProductPage() {
                 <Input type="number" onChange={priceChangeHandler} value={Price}/>
                 <br />
                 <br />
-                <select>
+                <select onChange={continentChangeHandler} value={Continent}>
+                    {Contintents.map(item => (
+                        <option key={item.key} value={item.key}>{item.value}</option>    
+                    ))}
                     <option></option>
                 </select>
                 <br />
