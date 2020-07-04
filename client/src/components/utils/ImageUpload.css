@@ -1,0 +1,19 @@
+  .ImageScroll {
+    display: flex;
+    width: 350px;
+    height: 240px;
+    overflow-x: scroll;    
+  }
+  .ImageScroll::-webkit-scrollbar {
+    width: 10px;
+  }
+  .ImageScroll::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+  }
+  .ImageScroll::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;   
+  }

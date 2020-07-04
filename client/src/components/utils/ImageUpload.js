@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import Dropzone from 'react-dropzone'
 import {Icon} from 'antd'
 import Axios from 'axios'
+import './ImageUpload.css'
 
 function FileUpload(props) {
 
@@ -63,7 +64,7 @@ function FileUpload(props) {
             )}
             </Dropzone>
 
-            <div style={{display:'flex', width:'350px', height:'240px', overflowX:'scroll'}}>
+            <div className="ImageScroll">
                     {Images.map((image, index) =>(
                         <div onClick={()=> deleteHandler(image)} key={index}>
                             <img style={{minWidth: '300px', width:'300px', height:'220px'}}
