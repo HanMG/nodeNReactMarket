@@ -34,7 +34,6 @@ router.post("/image", (req, res) => {
 })
 
 // 상품정보를 데이터베이스에 저장
-
 router.post("/", (req, res) => {    
 
     const product = new Product(req.body)
@@ -45,5 +44,20 @@ router.post("/", (req, res) => {
     })
     
 })
+
+// 모든 상품 정보를 가져오기
+router.post("/products", (req, res) => {    
+
+    Product.find()
+        .populate('writer')
+        .exec((err, productInfo) =>{
+            if(err) return res.status(400).json({success: false, err})
+            return res.status(200).json({success: true, productInfo})
+        })
+    
+})
+
+
+
 
 module.exports = router;
