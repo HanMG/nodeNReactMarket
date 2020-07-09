@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import Axios from 'axios'
+import numeral from 'numeral'
 import {Icon, Col, Card, Row, Button} from 'antd'
 import Meta from 'antd/lib/card/Meta'
 import ImageSlider from '../../utils/ImageSilder'
 import CheckBox from './Sections/CheckBox'
 import { continents } from './Sections/Datas'
+
 
 function LandingPage() {
 
@@ -70,14 +72,14 @@ function LandingPage() {
 
     // 카드
     const renderCards = Products.map((product, index) =>{
-
+        let price = numeral(product.price).format('0,0')
         return <Col lg={6} md={8} xs={24} key={index}>
             <Card                
                 cover={<ImageSlider images={product.images} />}
             >
                 <Meta 
                     title={product.title}
-                    description={`${product.price}원`}
+                    description={`₩${price}원`}
                 />
             </Card>
         </Col>
