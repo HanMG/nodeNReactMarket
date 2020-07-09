@@ -3,6 +3,8 @@ import Axios from 'axios'
 import {Icon, Col, Card, Row, Button} from 'antd'
 import Meta from 'antd/lib/card/Meta'
 import ImageSlider from '../../utils/ImageSilder'
+import CheckBox from './Sections/CheckBox'
+import { continents } from './Sections/Datas'
 
 function LandingPage() {
 
@@ -12,8 +14,13 @@ function LandingPage() {
     const [Skip, setSkip] = useState(0)
     // 불러올 상품수
     const [Limit, setLimit] = useState(8)
-    // 더보기버튼의 출력여부를 위한 전체 상품수
+    // 더보기버튼의 출력여부를 위한 가져온 상품수
     const [PostSize, setPostSize] = useState(0)
+    // 필터관련 State
+    const [Filters, setFilters] = useState({
+        continents: [],
+        price: []
+    })
 
 
     useEffect(() =>{       
@@ -27,7 +34,9 @@ function LandingPage() {
         
 
     }, [])
+    
 
+    // 상품 가져오기
     const getProducts = (body) =>{
         Axios.post('/api/product/products', body)
             .then(response =>{
@@ -44,6 +53,7 @@ function LandingPage() {
             })
     }
 
+    // 더보기
     const loadMoreHandler = () =>{
         let skip = Skip + Limit
 
@@ -58,6 +68,7 @@ function LandingPage() {
         setSkip(skip)
     }
 
+    // 카드
     const renderCards = Products.map((product, index) =>{
 
         return <Col lg={6} md={8} xs={24} key={index}>
@@ -66,11 +77,32 @@ function LandingPage() {
             >
                 <Meta 
                     title={product.title}
-                    description={`$${product.price}`}
+                    description={`${product.price}원`}
                 />
             </Card>
         </Col>
     })    
+
+    const showFilteredResults = (filters) =>{
+
+        let body = {
+            skip: 0,
+            limit: Limit,
+            filters: filters            
+        }
+
+        getProducts(body)
+        setSkip(0)
+
+    }
+
+    const handleFilter = (filters, category) => {
+        const newFilters = {...Filters}
+
+        newFilters[category] = filters
+
+        showFilteredResults(newFilters)
+    }
 
     return (
        <div style={{width:'75%', margin: '3rem auto'}}>
@@ -78,6 +110,11 @@ function LandingPage() {
                <h2>Let's Travel Anywhere</h2>
            </div>
            {/* Filter */}
+
+           {/* CheckBox */}
+           <CheckBox list={continents} handleFilters={filters => handleFilter(filters, "continents" )} />
+
+           {/* RadioBox */}
 
            {/* Search */}
 

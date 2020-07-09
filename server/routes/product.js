@@ -51,8 +51,20 @@ router.post("/products", (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 20;
     let skip = req.body.skip ?  parseInt(req.body.skip) : 0;
 
+    let findArgs = {};
+
+    for(let key in req.body.filters){
+        // key는 category인 continents or price
+        if(req.body.filters[key].length > 0){
+            findArgs[key] = req.body.filters[key];
+        }
+    }    
+
+    console.log(findArgs)
+
+
     // skip(시작점)과 limit(출력량)을 통해 제한된 숫자만 보여지게끔 
-    Product.find()
+    Product.find(findArgs)
         .populate('writer')
         .skip(skip)
         .limit(limit)
