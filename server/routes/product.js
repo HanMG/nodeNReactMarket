@@ -54,10 +54,22 @@ router.post("/products", (req, res) => {
     let findArgs = {};
 
     for(let key in req.body.filters){
+
         // key는 category인 continents or price
         if(req.body.filters[key].length > 0){
-            findArgs[key] = req.body.filters[key];
+
+            if(key === "price"){
+                findArgs[key] = {
+                    // greater than equal, 몽고 DB에서 크거나 같은
+                    $gte: req.body.filters[key][0],
+                    // less than equeal, 몽고 DB에서 작거나 같은
+                    $lte: req.body.filters[key][1]
+                }
+            }else{
+                findArgs[key] = req.body.filters[key];
+            }           
         }
+
     }    
 
     console.log(findArgs)

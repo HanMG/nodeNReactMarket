@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import Axios from 'axios'
-import numeral from 'numeral'
 import {Icon, Col, Card, Row, Button} from 'antd'
 import Meta from 'antd/lib/card/Meta'
 import ImageSlider from '../../utils/ImageSilder'
 import CheckBox from './Sections/CheckBox'
-import { continents } from './Sections/Datas'
+import RadioBox from './Sections/RadioBox'
+import { continents, price } from './Sections/Datas'
 
 
 function LandingPage() {
@@ -71,15 +71,14 @@ function LandingPage() {
     }
 
     // 카드
-    const renderCards = Products.map((product, index) =>{
-        let price = numeral(product.price).format('0,0')
+    const renderCards = Products.map((product, index) =>{        
         return <Col lg={6} md={8} xs={24} key={index}>
             <Card                
                 cover={<ImageSlider images={product.images} />}
             >
                 <Meta 
                     title={product.title}
-                    description={`₩${price}원`}
+                    description={`$${product.price}`}
                 />
             </Card>
         </Col>
@@ -98,12 +97,38 @@ function LandingPage() {
 
     }
 
+    // 가격 범위를 array에 담아 priceValues로 보냄
+    const handlePrice = (value) =>{
+        const data = price;
+        let array = [];
+
+        for(let key in data){
+
+            if(data[key]._id === parseInt(value, 10)){
+                array = data[key].array;
+            }
+        }
+
+        return array
+    }
+    
+
+    // 필터 - 체크박스 라디오 박스 
     const handleFilter = (filters, category) => {
         const newFilters = {...Filters}
 
         newFilters[category] = filters
 
+        if(category === "price"){
+            let priceValues = handlePrice(filters)
+            newFilters[category] = priceValues
+        }
+
+        console.log(newFilters)
+
         showFilteredResults(newFilters)
+
+        setFilters(newFilters)        
     }
 
     return (
@@ -113,10 +138,18 @@ function LandingPage() {
            </div>
            {/* Filter */}
 
-           {/* CheckBox */}
-           <CheckBox list={continents} handleFilters={filters => handleFilter(filters, "continents" )} />
+            <Row gutter={[16,16]}>
+                <Col lg={12} xs={24}>
+                    {/* CheckBox */}
+           <CheckBox list={continents} handleFilters={filters => handleFilter(filters, "continents" )} />         
+                </Col>
+                <Col lg={12} xs={24}>
+                    <RadioBox list={price} handleFilters={filters => handleFilter(filters, "price" )}/>
+                </Col>
+            </Row>
+           
 
-           {/* RadioBox */}
+           {/* RadioBox */}           
 
            {/* Search */}
 
