@@ -50,6 +50,7 @@ router.post("/products", (req, res) => {
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 20;
     let skip = req.body.skip ?  parseInt(req.body.skip) : 0;
+    let term = req.body.searchTerm
 
     let findArgs = {};
 
@@ -74,17 +75,31 @@ router.post("/products", (req, res) => {
 
     console.log(findArgs)
 
-
+    // 검색 조건이 있을시
+    if(term){
+        Product.find(findArgs)
+            // 많은양의 데이터중 검색시 $text 사용
+            //.find({$text: {$search: term}})
+            // 일반적인 Like 같은 효과를 위해선 아래 사용, 위보다 느림
+            .find({"title":{'$regex': term}})
+            .populate('writer')
+            .skip(skip)
+            .limit(limit)
+            .exec((err, productInfo) =>{
+                if(err) return res.status(400).json({success: false, err})
+                return res.status(200).json({success: true, productInfo, postSize: productInfo.length})
+            })    
+    }else{
     // skip(시작점)과 limit(출력량)을 통해 제한된 숫자만 보여지게끔 
-    Product.find(findArgs)
-        .populate('writer')
-        .skip(skip)
-        .limit(limit)
-        .exec((err, productInfo) =>{
-            if(err) return res.status(400).json({success: false, err})
-            return res.status(200).json({success: true, productInfo, postSize: productInfo.length})
-        })
-    
+        Product.find(findArgs)
+            .populate('writer')
+            .skip(skip)
+            .limit(limit)
+            .exec((err, productInfo) =>{
+                if(err) return res.status(400).json({success: false, err})
+                return res.status(200).json({success: true, productInfo, postSize: productInfo.length})
+            })
+    }    
 })
 
 

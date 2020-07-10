@@ -5,6 +5,7 @@ import Meta from 'antd/lib/card/Meta'
 import ImageSlider from '../../utils/ImageSilder'
 import CheckBox from './Sections/CheckBox'
 import RadioBox from './Sections/RadioBox'
+import SearchFeature from './Sections/SearchFeature'
 import { continents, price } from './Sections/Datas'
 
 
@@ -23,6 +24,7 @@ function LandingPage() {
         continents: [],
         price: []
     })
+    const [SearchTerm, setSearchTerm] = useState("")
 
 
     useEffect(() =>{       
@@ -131,6 +133,23 @@ function LandingPage() {
         setFilters(newFilters)        
     }
 
+    // 검색 컴포넌트로 부터 값을 받아옴
+    const updateSearchTerm = (newSearchTerm) =>{
+        
+
+        let body = {
+            skip: 0,
+            limit: Limit,
+            filters: Filters,
+            searchTerm: newSearchTerm
+        }
+
+        setSkip(0)
+        setSearchTerm(newSearchTerm)
+        
+        getProducts(body)
+    }
+
     return (
        <div style={{width:'75%', margin: '3rem auto'}}>
            <div style={{textAlign: 'center'}}>
@@ -139,19 +158,25 @@ function LandingPage() {
            {/* Filter */}
 
             <Row gutter={[16,16]}>
-                <Col lg={12} xs={24}>
-                    {/* CheckBox */}
-           <CheckBox list={continents} handleFilters={filters => handleFilter(filters, "continents" )} />         
+                {/* CheckBox */}
+                <Col lg={12} xs={24}>                    
+                   <CheckBox list={continents} handleFilters={filters => handleFilter(filters, "continents" )} />         
                 </Col>
+                {/* RadioBox */} 
                 <Col lg={12} xs={24}>
                     <RadioBox list={price} handleFilters={filters => handleFilter(filters, "price" )}/>
                 </Col>
             </Row>
            
 
-           {/* RadioBox */}           
+                     
 
            {/* Search */}
+           <div style={{display:'flex', justifyContent:'flex-end', margin: '1rem auto'}}>
+                <SearchFeature 
+                    refreshFunction={updateSearchTerm}
+                />
+           </div>
 
            {/* Card */}
            <Row gutter={[16,16]}>
