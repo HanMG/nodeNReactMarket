@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import Axios from "axios";
 import { useDispatch } from 'react-redux'
-import { getCartItems } from '../../../_actions/user_actions'
+import { getCartItems, removeCartItem } from '../../../_actions/user_actions'
 import UserCardBlock from './Sections/UserCardBlock'
 
 
@@ -27,10 +27,10 @@ function CartPage(props) {
                     })
             }
         }
-
         
     }, [props.user.userData])
 
+    // 총 금액 구하는 함수
     let calculateTotal = (cartDetail) =>{
         let total = 0
 
@@ -41,11 +41,16 @@ function CartPage(props) {
         setTotal(total)
     }
 
+    // Remove클릭시 카트에서 제거, 리덕스 user_actions로 
+    let removeFromCart = (productId) =>{
+        dispatch(removeCartItem(productId))            
+    }
+
     return (
         <div style={{width: '85%', margin: '3rem auto'}}>            
             <h1>My Cart</h1>
             <div>
-                <UserCardBlock products={props.user.cartDetail} />
+                <UserCardBlock products={props.user.cartDetail} removeItem={removeFromCart}/>
             </div>
             <div style={{marginTop: '3rem'}}>
                 <h2>Total Amount:  ${Total}</h2>
