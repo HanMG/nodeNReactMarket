@@ -1,14 +1,15 @@
 import React,{useState, useEffect} from 'react'
-import Axios from "axios";
 import { useDispatch } from 'react-redux'
 import { getCartItems, removeCartItem } from '../../../_actions/user_actions'
 import UserCardBlock from './Sections/UserCardBlock'
+import { Empty } from 'antd'
 
 
 function CartPage(props) {
     const dispatch = useDispatch();
 
     const [Total, setTotal] = useState(0)
+    const [ShowTotal, setShowTotal] = useState(false)
 
     useEffect(() => {
 
@@ -39,11 +40,17 @@ function CartPage(props) {
         })
 
         setTotal(total)
+        setShowTotal(true)
     }
 
     // Remove클릭시 카트에서 제거, 리덕스 user_actions로 
     let removeFromCart = (productId) =>{
-        dispatch(removeCartItem(productId))            
+        dispatch(removeCartItem(productId))      
+            .then(response =>{
+                if(response.payload.productInfo.length <= 0){
+                    setShowTotal(false)
+                }
+            })      
     }
 
     return (
@@ -52,9 +59,17 @@ function CartPage(props) {
             <div>
                 <UserCardBlock products={props.user.cartDetail} removeItem={removeFromCart}/>
             </div>
-            <div style={{marginTop: '3rem'}}>
-                <h2>Total Amount:  ${Total}</h2>
-            </div>
+            {ShowTotal ?                 
+                <div style={{marginTop: '3rem'}}>
+                    <h2>Total Amount:  ${Total}</h2>
+                </div>
+                :
+                <div style={{margin: '30px'}}>
+                    <Empty description={false} />  
+                    <h3 style={{textAlign:'center', margin: '1rem auto', color: '#cccccc'}}>NO ITEMS IN CART</h3>                  
+                </div>
+            }
+            
         </div>
     )
 }
