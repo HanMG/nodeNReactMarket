@@ -210,7 +210,7 @@ router.post('/successBuy', auth, (req,res) =>{
 
                 // async
                 async.eachSeries(products, (item, callback) =>{
-                    Product.update(
+                    Product.updateOne(
                         {_id: item.id},
                         {
                             $inc: {
