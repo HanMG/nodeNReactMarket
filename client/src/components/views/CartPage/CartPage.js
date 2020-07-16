@@ -71,7 +71,12 @@ function CartPage(props) {
                     <h3 style={{textAlign:'center', margin: '1rem auto', color: '#cccccc'}}>NO ITEMS IN CART</h3>                  
                 </div>
             }
-            <Paypal />
+
+            {ShowTotal &&
+                <Paypal 
+                    total={Total}
+                />
+            }
             
         </div>
     )
